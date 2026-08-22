@@ -6,7 +6,7 @@ Apache Hive provides the structured SQL layer between HDFS storage and the Spark
 
 ## Hive Table Design
 
-**Table name:** `[Enter table name]`
+**Table name:** `branch_growth`  
 
 Explain the table schema and the key design choices made for the project dataset, including important column names, data types, and any decisions needed to make the data usable for downstream Spark processing.
 
