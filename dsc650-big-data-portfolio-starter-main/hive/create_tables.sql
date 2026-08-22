@@ -7,8 +7,13 @@
 --   3. Keep the SQL that best demonstrates your work.
 
 -- Example structure only:
--- CREATE EXTERNAL TABLE your_table (
---     id STRING,
---     ...
--- )
--- STORED AS ...;
+CREATE TABLE branch_growth (
+  `Branch_ID` STRING,
+  `Region` STRING,
+  `Ad_Budget_K` INT,
+  `New_Accnts_Opened` INT
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE
+tblproperties("skip.header.line.count"="1");
