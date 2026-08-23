@@ -1,10 +1,3 @@
--- DSC 650 Portfolio Starter
--- Replace this file with the Hive DDL from your final project.
---
--- Before publishing:
---   1. Remove credentials or environment-specific secrets.
---   2. Add short comments explaining important tables.
---   3. Keep the SQL that best demonstrates your work.
 
 -- In the Hive CLI, create a table named branch_growth:
 CREATE TABLE branch_growth (
