@@ -30,6 +30,10 @@ Explain how the initial empty scan confirms that the target table exists before 
 
 ![Empty HBase Scan](screenshots/hbase-empty-scan.png)
 
+**Schema & Metadata Validation:** The scan operation queries the HBase Master and RegionServers for the table's region location. Returning 0 row(s) instead of a TableNotFoundException proves that the table metadata is registered and the region is online.  
+**Write-Path Readiness:** Executing a successful read scan verifies that the underlying column family (cf) structure is initialized on disk and listening for incoming connection requests from Spark executors.  
+
+
 ## Metrics Written by Spark
 
 List the model-performance metrics written into HBase.
