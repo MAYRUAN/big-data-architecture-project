@@ -63,24 +63,48 @@ Summarize the major portions of the pipeline that executed successfully.
 
 Describe the most meaningful technical problems encountered while building the project.
 
+Challenges: Resolving Script and Execution Errors During Pipeline Development
+
 For each important challenge, explain:
 
-1. what happened;
-2. how you investigated it;
-3. what you changed or fixed;
-4. what you learned from the issue.
+1. What happened?  
+  Unexpected errors occurred during code execution and script execution while connecting Spark MLlib transformations to downstream storage targets.  
+2. How you investigated it?  
+   Analyzed raw terminal execution logs and stack traces, then cross-referenced error messages against external online technical resources, class documentation, and rewatched the walkthrough video.  
+3. What you changed or fixed?  
+   Refined Python script logic to handle dataframe schema constraints cleanly and corrected partition-level execution code to allow Spark executors to write outputs smoothly. Rerun the command in the terminal to fix errors.  
+4. What you learned from the issue.  
+   Developing strong end-to-end troubleshooting habits—isolating errors using log output and leveraging technical documentation—is essential for resolving integration issues across distributed big data systems.  
+
 
 ## Results
 
 Summarize the final technical results, including the successful movement of data through the pipeline and the machine learning results produced by Spark MLlib.
 
+**Pipeline Data Movement**  
+**Ingestion & Storage:** Raw branch growth data flowed seamlessly through Apache NiFi into HDFS, where it was structured into the branch_growth Hive table.  
+**Processing & Analytics:** PySpark queried Hive (SELECT Ad_Budget_K, New_Accnts_Opened), cleaned missing entries (growth_df.na.drop()), and vectorized input attributes via VectorAssembler.  
+**Persistence & Verification:** Using foreachPartition, Spark executors wrote the final performance outputs to the branch_growth_metrics HBase table, which was verified with the HBase shell scan command.  
+
+**Spark MLlib Model Results**  
+**R-Squared ($R^2$):** 0.9393862497926574 ($\approx 0.9394$)  
+**Root Mean Squared Error (RMSE):** 3.8133770876014292 ($\approx 3.8134$)  
+**Predictive Performance:** The LinearRegression model demonstrated an exceptionally high goodness of fit, explaining approximately 93.94% of the variance in new account openings with respect to advertising expenditure (Ad_Budget_K), with an average prediction error of only 3.81 accounts.  
+
+
 ## Lessons Learned
 
-Describe the most important technical lessons gained from integrating multiple distributed services in one environment.
+Describe the most important technical lessons gained from integrating multiple distributed services in one environment.  
+
+Integrating multiple distributed services highlights that pipeline success relies on managing data formats and network handoffs across distinct architectures, rather than viewing individual tools in isolation.  
+Writing to external storage, such as HBase, from Spark requires partition-aware execution, such as foreachPartition, to prevent network bottlenecks and connection pool exhaustion across worker nodes.  
+Stable execution requires a firm grasp of how YARN orchestrates resources, allocating memory overhead and driver or executor containers across the cluster.  
+Finally, diagnosing failures in complex environments depends on analyzing logs across every layer—from YARN and Spark down to HBase—while embedding defensive data preparation to maintain end-to-end pipeline resilience.  
+ 
 
 ## Production Considerations
 
-Explain what you would change if this architecture were being deployed as a production system.
+Explain what you would change if this architecture were being deployed as a production system.  
 
 Possible areas to consider include:
 
@@ -92,3 +116,17 @@ Possible areas to consider include:
 - data governance;
 - secrets management;
 - scalability and fault tolerance.
+
+Transitioning this architecture into a production-grade system requires moving from a local, client-mode sandbox to an enterprise enterprise data platform focused on security, automation, and reliability.
+
+**Production Architecture Upgrades**
+
+**Orchestration & CI/CD:** Replace manual spark-submit executions with Apache Airflow to automate pipeline scheduling, dependency management, and automated retries. Deploy code through automated CI/CD pipelines to ensure consistent testing and deployment.  
+
+**Security & Secrets Management:** Implement Kerberos authentication across all cluster services and migrate sensitive connection strings from scripts to a centralized vault, such as HashiCorp Vault, to enforce secure access controls.  
+
+**High Availability & Fault Tolerance:** Run Spark in Cluster Mode rather than Client Mode so the driver runs redundantly inside YARN containers. Configure active-standby NameNodes and ResourceManagers using Apache ZooKeeper to remove single points of failure.  
+
+**Observability & Monitoring:** Integrate Prometheus and Grafana to track Spark executor health, memory overhead, and HBase throughput in real time, setting up automated alerts for pipeline failures.  
+
+
