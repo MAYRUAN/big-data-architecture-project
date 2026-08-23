@@ -1,10 +1,7 @@
-# DSC 650 Portfolio Starter
-# Replace these comments with representative HBase commands from your project.
-#
-# Suggested examples:
-#   create ...
-#   put ...
-#   get ...
-#   scan ...
-#
+
 # Add brief comments so a reviewer understands what each group of commands demonstrates.
+# Step 1: Create HBase table with column family 'cf'
+create 'branch_growth_metrics', 'cf'
+
+# Step 2: Verify table creation with empty scan prior to Spark ingestion
+scan 'branch_growth_metrics'
