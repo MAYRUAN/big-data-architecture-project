@@ -53,6 +53,12 @@ HBase is built natively in Java and communicates via custom Java RPCs. The Thrif
 
 Summarize the major portions of the pipeline that executed successfully.
 
+**Data Ingestion & Hive Storage:** Raw branch performance data was successfully ingested via NiFi to HDFS and structured into the branch_growth Hive table for SQL-based querying.  
+**Spark Cluster Execution:** The PySpark job (sparkml.py) submitted cleanly via spark-submit to YARN, properly allocating containers across worker nodes.  
+**Data Preprocessing & Feature Engineering:** PySpark handled data cleaning by dropping null records (growth_df.na.drop()) and vectorized Ad_Budget_K into input feature arrays using VectorAssembler.  
+**Model Training & Evaluation:** A LinearRegression model successfully trained on a 70/30 split, outputting high-accuracy evaluation metrics ($R^2 \approx 0.9394$, $RMSE \approx 3.8134$).  
+**HBase Metric Persistence & Verification:** Spark executors successfully opened Thrift client connections during foreachPartition to write evaluation metrics to branch_growth_metrics, as verified by a scan in the HBase shell.  
+
 ## Issues & Challenges Encountered
 
 Describe the most meaningful technical problems encountered while building the project.
