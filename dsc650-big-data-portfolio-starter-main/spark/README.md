@@ -79,7 +79,7 @@ Explain what the resulting values indicate about model performance.
 Document the exact `spark-submit` command used to submit the PySpark application through YARN.
 
 ```bash
-# Paste your spark-submit command here
+# Spark-submit command
 spark-submit \
   --master yarn \
   --deploy-mode client \
