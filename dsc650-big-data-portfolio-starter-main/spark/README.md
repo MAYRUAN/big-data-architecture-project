@@ -66,7 +66,6 @@ Explain what the resulting values indicate about model performance.
 **Low Average Error ($\text{RMSE} \approx 3.81$):**  The RMSE indicates that on average, the model's predictions deviate from the actual count of new accounts opened by approximately 3.81 accounts, providing a narrow error margin suitable for branch decision-making and resource allocation.  
 
 
-
 ### Training Output
 
 ![Spark Training Output](screenshots/spark-training-output.png)
@@ -93,8 +92,23 @@ Briefly describe the successful execution and any important log or output inform
 
 ![Spark Submit Output](screenshots/spark-submit-output.png)
 
+**Cluster Submission:** The application (sparkml.py) submitted cleanly to YARN (--master yarn), connecting to the ResourceManager (master:8032) and launching Application Master containers across 2 NodeManagers.  
+**Metric Computation:** All DAG stages completed successfully, writing the calculated model performance metrics ($RMSE \approx 3.8134$, $R^2 \approx 0.9394$) directly to the log console.  
+
+
 ## HBase Output
 
 List the model-performance metrics written by Spark into HBase and explain how the application connects the machine learning stage to the final persistence layer.
+
+**Model-Performance Metrics Written to HBase**  
+**R-Squared ($R^2$):** 0.9393862497926574 (stored in column cf:r2)  
+**Root Mean Squared Error (RMSE):** 3.8133770876014292 (stored in column cf:rmse)  
+
+**Connecting MLlib to the HBase Persistence Layer**  
+1. **Evaluation Output Extraction:** Once the LinearRegression model computes predictions on the test dataset, the RegressionEvaluator calculates the scalar evaluation metrics ($R^2$ and $RMSE$) within the PySpark driver script.  
+2. **DataFrame Structuring:** The metric values are formatted as key-value records (row_key: metrics1, cf:r2, cf:rmse) and converted into a distributed PySpark DataFrame or RDD.   
+3. **Partition-Level Database Mutation:** The application calls a distributed foreachPartition action. Each Spark executor opens a client connection to HBase, instantiates batch Put operations containing the evaluated metric values, and writes them directly to the target branch_growth_metrics table over the network.  
+
+
 
 **PySpark source files:** [`processing.py`](processing.py) and/or [`analysis.py`](analysis.py)
