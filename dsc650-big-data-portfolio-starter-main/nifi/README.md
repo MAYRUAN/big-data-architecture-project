@@ -12,8 +12,8 @@ Apache NiFi provides the ingestion and orchestration layer for this project. The
 **Briefly describe what the dataset contains and why it was selected.**  
 
 The branch_growth.csv dataset contains operational metrics for 50 distinct business branches (B001 through B050) across five key geographic regions (North, South, East, West, Central). For each branch, it tracks two primary quantitative variables:  
-Ad_Budget_K: The local advertising expenditure measured in thousands of dollars.  
-New_Accnts_Opened: The volume of new customer accounts acquired.  
+**Ad_Budget_K:** The local advertising expenditure measured in thousands of dollars.  
+**New_Accnts_Opened:** The volume of new customer accounts acquired.  
 
 **Why It Was Selected:**
 
