@@ -8,11 +8,15 @@ The HBase table is created before the Spark job runs, verified with an empty sca
 
 ## Table Design
 
-**Table name:** `[Enter HBase table name]`  
-**Row key:** `[Describe the row key]`  
-**Column family/families:** `[Enter column family names]`
+**Table name:** `branch_growth_metrics`      
+**Row key:** `Branch_ID`  
+**Column family/families:** `cf`  
 
-Explain why the selected row key and column family design are appropriate for the model metrics being stored.
+Explain why the selected row key and column family design are appropriate for the model metrics being stored.  
+
+**Row Key (Branch_ID):** Provides $O(1)$ point-lookup performance for branch records while distributing writes evenly across HBase regions to prevent hotspotting during Spark batch ingestion.  
+**Column Family (cf):** Co-locates features (Ad_Budget_K), actual targets (New_Accnts_Opened), and predictions (Predicted_New_Accounts) within a single HFile, eliminating multi-file I/O overhead and lowering compaction memory pressure during model evaluation scans.  
+
 
 ## HBase Commands
 
